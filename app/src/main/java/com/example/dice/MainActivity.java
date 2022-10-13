@@ -28,25 +28,47 @@ public class MainActivity extends AppCompatActivity {
         kostki.add(findViewById(R.id.imageView3));
         kostki.add(findViewById(R.id.imageView4));
 
+        losowanie();
 
         diceButton = findViewById(R.id.button);
-        for(int i=0;i<5;i++){
-            kostki.get(i).setOnClickListener(new View.OnClickListener() {
+        for (int i = 0; i < kostki.size(); i++) {
+            int id = i;
+            ImageView image = kostki.get(i);
+            image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(MainActivity.this,"kliknięto",Toast.LENGTH_SHORT).show();
+                    if(image.getImageAlpha()==50){
+                        image.setImageAlpha(255);
+                        rolledDices.get(id).setClicked(false);
+                    }else{
+                        image.setImageAlpha(50);
+                        rolledDices.get(id).setClicked(true);
+                    }
                 }
             });
         }
         diceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i=0;i<5;i++){
-                    Dice dice = new Dice();
-                    rolledDices.add(dice);
+            losowanie();
+            }
+        });
+    }
+    private void losowanie(){
+        if(rolledDices.size()==0){
+            for(int i=0;i<5;i++){
+                Dice dice = new Dice();
+                rolledDices.add(dice);
+                kostki.get(i).setImageResource(dice.getId_image());
+            }
+        }else{
+            for (int i = 0; i < 5; i++) {
+                Dice dice = rolledDices.get(i);
+                if (dice.isClicked() == false) {
+                    dice.setValue();
                     kostki.get(i).setImageResource(dice.getId_image());
                 }
             }
-        });
+        }
     }
 }
